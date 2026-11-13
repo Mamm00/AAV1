@@ -38,7 +38,7 @@ class VoiceDictator(
     fun start(language: String = java.util.Locale.getDefault().toLanguageTag()) {
         if (listening) return
         if (!SpeechRecognizer.isRecognitionAvailable(appContext)) {
-            notifyError("Voice input isn't available on this device", permanent = true)
+            notifyError("Voice input isn't available on this device", true)
             return
         }
         recognizer = SpeechRecognizer.createSpeechRecognizer(appContext).also { it.setRecognitionListener(this) }
@@ -84,7 +84,7 @@ class VoiceDictator(
             ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             ?.firstOrNull()
             .orEmpty()
-        if (text.isNotBlank()) onFinal(text) else notifyError("Didn't catch that", permanent = false)
+        if (text.isNotBlank()) onFinal(text) else notifyError("Didn't catch that", false)
         destroy()
     }
 
@@ -104,16 +104,16 @@ class VoiceDictator(
         listening = false
         when (error) {
             SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS ->
-                notifyError("Microphone permission denied", permanent = true)
+                notifyError("Microphone permission denied", true)
             SpeechRecognizer.ERROR_NO_MATCH ->
-                notifyError("Didn't catch that", permanent = false)
+                notifyError("Didn't catch that", false)
             SpeechRecognizer.ERROR_RECOGNIZER_BUSY ->
-                notifyError("Voice service busy — try again", permanent = false)
+                notifyError("Voice service busy — try again", false)
             SpeechRecognizer.ERROR_CLIENT,
             SpeechRecognizer.ERROR_NETWORK,
             SpeechRecognizer.ERROR_NETWORK_TIMEOUT,
-            -> notifyError("Voice input failed — check your connection", permanent = false)
-            else -> notifyError("Voice input failed", permanent = false)
+            -> notifyError("Voice input failed — check your connection", false)
+            else -> notifyError("Voice input failed", false)
         }
         destroy()
     }
