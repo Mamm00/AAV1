@@ -41,14 +41,14 @@ sealed interface ArenaNavEvent {
  * Responsibilities:
  *  - Emits [ArenaNavEvent]s so native UI can show offline fallbacks with
  *    cached model lists and last conversation history.
- *  - Keeps navigation inside `https://arena.ai` / `https://*.arena.ai`;
+ *  - Keeps navigation inside `arena.ai` and its `*.arena.ai` subdomains;
  *    external links are handed to the host (Custom Tab) instead of loading
  *    in-place, which also keeps the JS bridge origin lock tight.
  *  - Detects renderer crashes so the wrapper can rebuild the WebView rather
  *    than freeze on a blank surface.
  *  - Back-forward cache compatibility: never call `WebView.stopLoading()` or
  *    rebuild state in `onPageFinished` for bfcache restores (the wrapper
- *    enables it via `WebSettingsCompat.setBackForwardCacheEnabled`).
+ *    relies on WebView's default bfcache support).
  */
 class ArenaWebViewClient(
     private val onEvent: (ArenaNavEvent) -> Unit,
