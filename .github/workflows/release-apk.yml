@@ -114,17 +114,17 @@ jobs:
           log = pathlib.Path(os.environ["RUNNER_TEMP"]) / "build.log"
           text = log.read_text(errors="replace") if log.exists() else "(no build.log)"
           chunk = None
-          for marker in ("What went wrong", "FAILURE:", "^e: ", "error: ", "Could not resolve"):
-              if marker.startswith("^e: "):
-                  idx = text.find("\ne: ")
+          # Kotlin compiler errors ("e: file:///...") precede Gradle's
+          # "What went wrong" summary — prefer them so we see real messages.
+          idx = text.find("\ne: ")
+          if idx >= 0:
+              chunk = text[idx:idx + 24000]
+          else:
+              for marker in ("error: ", "Could not resolve", "What went wrong", "FAILURE:"):
+                  idx = text.find(marker)
                   if idx >= 0:
                       chunk = text[idx:idx + 24000]
                       break
-                  continue
-              idx = text.find(marker)
-              if idx >= 0:
-                  chunk = text[idx:idx + 24000]
-                  break
           if chunk is None:
               chunk = text[-24000:]
           enc = chunk.replace("\r\n", "\n")
