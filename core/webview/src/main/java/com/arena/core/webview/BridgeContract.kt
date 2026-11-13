@@ -129,7 +129,7 @@ fun isAllowedArenaOrigin(origin: String?): Boolean {
 }
 
 /** WebMessageListener origin rules matching [isAllowedArenaOrigin]. */
-val ARENA_ORIGIN_RULES: List<String> = listOf(
+val ARENA_ORIGIN_RULES: Set<String> = setOf(
     "https://arena.ai",
     "https://*.arena.ai",
 )

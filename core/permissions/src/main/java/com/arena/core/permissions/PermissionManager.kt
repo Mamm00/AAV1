@@ -123,16 +123,16 @@ class PermissionManager(
         )
         return when (decision) {
             PermissionDecision.AlreadyGranted -> {
-                _effects.trySend(PermissionEffect.Proceed)
+                _effects.tryEmit(PermissionEffect.Proceed)
                 true
             }
             PermissionDecision.ShowRationale -> {
                 _pendingRationale.value = useCase
-                _effects.trySend(PermissionEffect.ShowRationale(useCase))
+                _effects.tryEmit(PermissionEffect.ShowRationale(useCase))
                 false
             }
             is PermissionDecision.UseFallback -> {
-                _effects.trySend(PermissionEffect.Fallback(useCase, decision.fallback))
+                _effects.tryEmit(PermissionEffect.Fallback(useCase, decision.fallback))
                 false
             }
             PermissionDecision.RequestSystemDialog -> {
@@ -153,7 +153,7 @@ class PermissionManager(
         when (decision) {
             PermissionDecision.RequestSystemDialog -> launchSystemDialog(useCase)
             is PermissionDecision.UseFallback ->
-                _effects.trySend(PermissionEffect.Fallback(useCase, decision.fallback))
+                _effects.tryEmit(PermissionEffect.Fallback(useCase, decision.fallback))
             else -> Unit
         }
     }
@@ -179,19 +179,19 @@ class PermissionManager(
         stats.recordResult(granted)
 
         if (granted) {
-            _effects.trySend(PermissionEffect.Proceed)
+            _effects.tryEmit(PermissionEffect.Proceed)
             return
         }
         val blocked = store.hasRequested(useCase) && !canShowRationale && store.denialCount(useCase) > 0
         if (blocked) {
-            _effects.trySend(PermissionEffect.Fallback(useCase, fallbackFor(useCase)))
+            _effects.tryEmit(PermissionEffect.Fallback(useCase, fallbackFor(useCase)))
         }
         // Soft denial: stay silent; the next tap re-evaluates the flow.
     }
 
     private fun launchSystemDialog(useCase: PermissionUseCase) {
         store.markRequested(useCase)
-        _effects.trySend(
+        _effects.tryEmit(
             PermissionEffect.LaunchSystemDialog(useCase, requiredPermissions(useCase)),
         )
     }

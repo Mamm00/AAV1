@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -90,9 +91,9 @@ fun ArenaWebView(
     var state by rememberSaveable(stateSaver = ArenaWebSession.Saver) { mutableStateOf(session) }
 
     // Latest callbacks without re-creating the WebView on every recomposition.
-    val navCallback = rememberLatest(onNavEvent)
-    val sessionCallback = rememberLatest(onSessionChanged)
-    val readyCallback = rememberLatest(onWebViewReady)
+    val navCallback = rememberUpdatedState(onNavEvent)
+    val sessionCallback = rememberUpdatedState(onSessionChanged)
+    val readyCallback = rememberUpdatedState(onWebViewReady)
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
@@ -118,13 +119,13 @@ fun ArenaWebView(
                                 state = state.copy(isLoading = true)
                             else -> Unit
                         }
-                        navCallback(event)
-                        sessionCallback(state)
+                        navCallback.value(event)
+                        sessionCallback.value(state)
                     },
                 )
                 bridge.attach(this)
                 loadUrl(initialUrl)
-                readyCallback(this)
+                readyCallback.value(this)
             }
         },
         update = { webView ->
@@ -132,7 +133,7 @@ fun ArenaWebView(
             val canGoBack = webView.canGoBack()
             if (canGoBack != state.canGoBack) {
                 state = state.copy(canGoBack = canGoBack)
-                sessionCallback(state)
+                sessionCallback.value(state)
             }
         },
         onRelease = { webView ->
@@ -142,7 +143,7 @@ fun ArenaWebView(
     )
 
     // Surface session changes to the caller whenever they mutate internally.
-    LaunchedEffect(state) { sessionCallback(state) }
+    LaunchedEffect(state) { sessionCallback.value(state) }
 }
 
 /** Apply the tuned settings required by the spec. */
@@ -175,14 +176,6 @@ fun applyArenaSettings(webView: WebView) {
         // needed (and the explicit callback API differs across WebView
         // versions, so we avoid binding to it here).
     }
-}
-
-/** Small helper to keep callbacks latest without recreating state holders. */
-@Composable
-private fun <T> rememberLatest(value: T): (T) -> Unit {
-    var latest by remember { mutableStateOf(value) }
-    latest = value
-    return { latest(it) }
 }
 
 /**

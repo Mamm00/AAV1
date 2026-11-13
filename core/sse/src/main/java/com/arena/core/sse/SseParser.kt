@@ -38,7 +38,7 @@ class SseParser {
      * terminating blank line is discarded per the SSE specification.
      */
     fun parse(reader: Reader): Flow<ArenaEvent> = flow {
-        val buffer = FrameBuffer()
+        val buffer = FrameBuffer(::decode)
         reader.buffered().use { r ->
             while (true) {
                 val line = r.readLine() ?: break
@@ -54,7 +54,7 @@ class SseParser {
      * by callers that own their own reading loop (e.g. a pre-buffered cache).
      */
     fun parseLines(lines: Flow<String>): Flow<ArenaEvent> = flow {
-        val buffer = FrameBuffer()
+        val buffer = FrameBuffer(::decode)
         lines.collect { line ->
             buffer.feed(line).forEach { emit(it) }
         }
@@ -69,7 +69,7 @@ class SseParser {
 
     // --------------------------------------------------------------------- //
 
-    private class FrameBuffer {
+    private class FrameBuffer(private val decode: (String?, String) -> List<ArenaEvent>) {
         private val data = StringBuilder()
         private var event: String? = null
         private var hasData = false
@@ -202,7 +202,7 @@ class SseParser {
                         },
                     ),
                 )
-                "usage" -> listOf(usageFrom(json)),
+                "usage" -> listOf(usageFrom(json))
                 "reasoning" -> listOf(
                     ArenaEvent.ReasoningDelta(
                         text = json.getString("text"),
