@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.Protocols
+import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ object AppModule {
             .readTimeout(30, TimeUnit.SECONDS)
             .callTimeout(45, TimeUnit.SECONDS)
             // Transport hint: prefer HTTP/2, fall back to HTTP/1.1.
-            .protocols(listOf(Protocols.HTTP_2, Protocols.HTTP_1_1))
+            .protocols(listOf(Protocol.HTTP_2, Protocol.HTTP_1_1))
 
         if (BuildConfig.DEBUG) {
             // Never log bodies: prompts/responses/tokens must not leak.
