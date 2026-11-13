@@ -46,8 +46,15 @@ sealed interface PermissionEffect {
     /** The action can proceed (permission already held). */
     data object Proceed : PermissionEffect
 
-    /** Permission is blocked; open the documented fallback path. */
-    data class Fallback(val useCase: PermissionUseCase, val fallback: Fallback) : PermissionEffect
+    /**
+     * Permission is blocked; open the documented fallback path.
+     * The property type is fully qualified because the simple name
+     * [Fallback] inside this scope would resolve to this class itself.
+     */
+    data class Fallback(
+        val useCase: PermissionUseCase,
+        val fallback: com.arena.core.permissions.Fallback,
+    ) : PermissionEffect
 }
 
 /**
