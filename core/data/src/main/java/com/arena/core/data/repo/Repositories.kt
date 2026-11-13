@@ -60,7 +60,8 @@ class ModelRepository @Inject constructor(
         return buildList {
             for (i in 0 until array.length()) {
                 val o = array.optJSONObject(i) ?: continue
-                val id = o.optString("id").ifBlank { o.optString("model") }.ifBlank { continue }
+                val id = o.optString("id").ifBlank { o.optString("model") }
+                if (id.isBlank()) continue
                 val name = o.optString("name").ifBlank { o.optString("display_name") }.ifBlank { id }
                 val modalityRaw = o.optString("modality").ifBlank { o.optString("type") }
                     .ifBlank { "TEXT" }.uppercase()
@@ -187,7 +188,8 @@ class LeaderboardRepository @Inject constructor(
         return buildList {
             for (i in 0 until array.length()) {
                 val o = array.optJSONObject(i) ?: continue
-                val modelId = o.optString("model_id").ifBlank { o.optString("model") }.ifBlank { continue }
+                val modelId = o.optString("model_id").ifBlank { o.optString("model") }
+                if (modelId.isBlank()) continue
                 val name = o.optString("name").ifBlank { o.optString("display_name") }.ifBlank { modelId }
                 val rank = o.optInt("rank", i + 1)
                 add(
