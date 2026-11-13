@@ -22,8 +22,12 @@ class VoiceDictator(
     private val onPartial: (String) -> Unit = {},
     private val onFinal: (String) -> Unit,
     private val onLevel: (Float) -> Unit = {},
-    private val onError: (message: String, permanent: Boolean) -> Unit = { _, _ -> },
+    onError: (message: String, permanent: Boolean) -> Unit = { _, _ -> },
 ) : RecognitionListener {
+
+    /** Kept under a distinct name: [onError] as a member resolves to the
+     *  RecognitionListener override, not this constructor callback. */
+    private val notifyError = onError
 
     private val appContext = context.applicationContext
     private var recognizer: SpeechRecognizer? = null
@@ -34,10 +38,10 @@ class VoiceDictator(
     fun start(language: String = java.util.Locale.getDefault().toLanguageTag()) {
         if (listening) return
         if (!SpeechRecognizer.isRecognitionAvailable(appContext)) {
-            onError("Voice input isn't available on this device", permanent = true)
+            notifyError("Voice input isn't available on this device", permanent = true)
             return
         }
-        recognizer = SpeechRecognizer.createSpeechRecognizer(appContext).also { it.setListener(this) }
+        recognizer = SpeechRecognizer.createSpeechRecognizer(appContext).also { it.setRecognitionListener(this) }
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -80,7 +84,7 @@ class VoiceDictator(
             ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             ?.firstOrNull()
             .orEmpty()
-        if (text.isNotBlank()) onFinal(text) else onError("Didn't catch that", permanent = false)
+        if (text.isNotBlank()) onFinal(text) else notifyError("Didn't catch that", permanent = false)
         destroy()
     }
 
@@ -100,16 +104,16 @@ class VoiceDictator(
         listening = false
         when (error) {
             SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS ->
-                onError("Microphone permission denied", permanent = true)
+                notifyError("Microphone permission denied", permanent = true)
             SpeechRecognizer.ERROR_NO_MATCH ->
-                onError("Didn't catch that", permanent = false)
+                notifyError("Didn't catch that", permanent = false)
             SpeechRecognizer.ERROR_RECOGNIZER_BUSY ->
-                onError("Voice service busy — try again", permanent = false)
+                notifyError("Voice service busy — try again", permanent = false)
             SpeechRecognizer.ERROR_CLIENT,
             SpeechRecognizer.ERROR_NETWORK,
             SpeechRecognizer.ERROR_NETWORK_TIMEOUT,
-            -> onError("Voice input failed — check your connection", permanent = false)
-            else -> onError("Voice input failed", permanent = false)
+            -> notifyError("Voice input failed — check your connection", permanent = false)
+            else -> notifyError("Voice input failed", permanent = false)
         }
         destroy()
     }

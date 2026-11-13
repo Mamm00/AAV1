@@ -70,7 +70,7 @@ fun BattleScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is BattleEffect.VoteRecorded -> {
-                    haptics.performHapticFeedback(HapticFeedbackType.Confirm)
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     snackbar.showSnackbar("Vote recorded — identities revealed")
                 }
                 is BattleEffect.ShowNotice -> snackbar.showSnackbar(effect.message)
