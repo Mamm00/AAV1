@@ -63,6 +63,12 @@ enum class CodeLanguage(val label: String) {
     SHELL("Shell"),
 }
 
+private val DEFAULT_SNIPPET = """fun main() {
+    val arena = "Battle, Direct, Side-by-Side, Agent"
+    println("Hello, ${'$'}arena")
+}
+"""
+
 data class CodeState(
     val language: CodeLanguage = CodeLanguage.KOTLIN,
     val code: String = DEFAULT_SNIPPET,
@@ -102,13 +108,6 @@ class CodeEditorViewModel @Inject constructor(
         }
     }
 
-    private companion object {
-        const val DEFAULT_SNIPPET = """fun main() {
-    val arena = "Battle, Direct, Side-by-Side, Agent"
-    println("Hello, $arena")
-}
-"""
-    }
 }
 
 /**

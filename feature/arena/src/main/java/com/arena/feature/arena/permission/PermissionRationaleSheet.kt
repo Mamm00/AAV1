@@ -42,7 +42,7 @@ fun PermissionRationaleSheet(
     onDismiss: () -> Unit,
 ) {
     val (title, body, icon) = when (useCase) {
-        PermissionUseCase.Camera -> Triple(
+        PermissionUseCase.CAMERA -> Triple(
             "Camera access",
             "Used only when you tap Take photo, so you can attach a fresh picture. " +
                 "The system photo picker always remains available as a fallback.",

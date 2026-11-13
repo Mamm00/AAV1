@@ -198,11 +198,11 @@ class DirectChatViewModel @Inject constructor(
                 content = trimmed,
                 modelId = model?.id,
             )
+            usageStats.record(mode = "DIRECT", modelId = model?.id, taskType = "chat")
         }
 
         // Push into the arena.ai session (queued until page ready).
         session.sendPrompt(trimmed, modelId = model?.id)
-        usageStats.record(mode = "DIRECT", modelId = model?.id, taskType = "chat")
     }
 
     private fun reduceArenaEvent(event: ArenaEvent) {

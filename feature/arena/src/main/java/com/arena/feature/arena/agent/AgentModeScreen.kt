@@ -146,7 +146,7 @@ fun AgentModeScreen(
             // ---- Bash output (monospace, scrollable, selectable) ----
             if (state.bashOutput.isNotBlank() || state.bashStderr.isNotBlank()) {
                 Text("Bash output", style = MaterialTheme.typography.titleMedium)
-                androidx.compose.foundation.selection.SelectionContainer {
+                androidx.compose.foundation.text.selection.SelectionContainer {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (state.bashOutput.isNotBlank()) {
                             BashOutputView(output = state.bashOutput)
