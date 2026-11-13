@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TLS only. Cleartext is disabled app-wide; WebView and OkHttp both honour
+    this config. Certificate pinning for arena.ai can be added here once pin
+    rotation policy is published.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">arena.ai</domain>
+    </domain-config>
+</network-security-config>

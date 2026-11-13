@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Arena</string>
+
+    <!-- Navigation / modes -->
+    <string name="mode_battle">Battle</string>
+    <string name="mode_direct">Direct</string>
+    <string name="mode_side_by_side">Side-by-Side</string>
+    <string name="mode_agent">Agent</string>
+    <string name="nav_back">Back</string>
+
+    <!-- Home -->
+    <string name="home_title">Arena</string>
+    <string name="home_leaderboard">Leaderboard</string>
+    <string name="home_image_editor">Image editor</string>
+    <string name="home_code_editor">Code editor</string>
+    <string name="home_clipboard_hint">Paste clipboard as prompt</string>
+    <string name="home_recommended">Recommended for you</string>
+
+    <!-- Battle -->
+    <string name="battle_vote_a">Vote A</string>
+    <string name="battle_vote_b">Vote B</string>
+    <string name="battle_vote_tie">Tie</string>
+    <string name="battle_vote_both_bad">Both bad</string>
+    <string name="battle_revealed">Models revealed</string>
+
+    <!-- Direct -->
+    <string name="direct_input_hint">Ask anything</string>
+    <string name="direct_send">Send</string>
+    <string name="direct_voice">Hold to dictate</string>
+    <string name="direct_attach">Attach file</string>
+    <string name="direct_switch_model">Switch model</string>
+
+    <!-- Agent -->
+    <string name="agent_web_search">Web search</string>
+    <string name="agent_files">Files</string>
+    <string name="agent_image_gen">Image generation</string>
+    <string name="agent_timeline">Task timeline</string>
+    <string name="agent_bash_output">Bash output</string>
+
+    <!-- Image editor -->
+    <string name="editor_crop">Crop</string>
+    <string name="editor_rotate">Rotate</string>
+    <string name="editor_filter">Filter</string>
+    <string name="editor_take_photo">Take photo</string>
+    <string name="editor_pick_image">Choose image</string>
+    <string name="editor_send">Send to model</string>
+
+    <!-- Permissions (pre-rationale sheet) -->
+    <string name="permission_camera_title">Camera access</string>
+    <string name="permission_camera_rationale">Used only when you tap Take photo, so you can attach a fresh picture to your prompt. You can always fall back to the system photo picker.</string>
+    <string name="permission_audio_title">Microphone access</string>
+    <string name="permission_audio_rationale">Used only when you hold the mic to dictate a prompt or record an agent voice note. Nothing is recorded until you press and hold.</string>
+    <string name="permission_media_title">Media access</string>
+    <string name="permission_media_rationale">Only needed if you want to browse your full photo library. Single picks use the system photo picker with no permission at all.</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_rationale">Lets us notify you when a long Agent task finishes and lets you vote on Battle results without opening the app.</string>
+    <string name="permission_continue">Continue</string>
+    <string name="permission_not_now">Not now</string>
+
+    <!-- Offline fallback -->
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_body">Showing your cached model list and last conversation. Reconnect to stream new responses.</string>
+    <string name="offline_retry">Retry</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_response_card">Model response</string>
+    <string name="a11y_vote_button">Vote</string>
+    <string name="a11y_loading">Loading</string>
+</resources>
