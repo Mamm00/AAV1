@@ -1,6 +1,7 @@
 package com.arena.core.webview
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
@@ -40,6 +41,18 @@ object PreviewPerformanceAddon {
     /** Minimum spacing between two warm-ups (re-entry storms stay cheap). */
     const val PREWARM_COOLDOWN_MS = 60_000L
 
+    /**
+     * Forces the mobile viewport before layout: create the meta if the page
+     * has none, otherwise overwrite it — device-width wins either way, so the
+     * document lays out exactly like mobile Chrome instead of at whatever
+     * fixed/desktop width the site declares (or omits).
+     */
+    internal const val ENFORCE_VIEWPORT_JS =
+        "(function(){try{var h=document.head||document.documentElement;" +
+            "var m=document.querySelector('meta[name=viewport]');" +
+            "if(!m){m=document.createElement('meta');m.setAttribute('name','viewport');h.appendChild(m);}" +
+            "m.setAttribute('content','width=device-width, initial-scale=1');}catch(e){}})();"
+
     private val warmed = AtomicBoolean(false)
 
     /**
@@ -55,6 +68,14 @@ object PreviewPerformanceAddon {
         // and let the system pick the initial scale (0 = fit, not 100%).
         webView.setInitialScale(0)
         webView.settings.apply {
+            // Chrome-parity user agent: strip the WebView markers ("; wv;"
+            // and "Version/4.0") so arena.ai serves EXACTLY the document it
+            // serves mobile Chrome — same engine, same layout, same page.
+            // (Existing arena.ai WebView clients all ship UA normalisation
+            // for this reason.)
+            userAgentString = WebSettings.getDefaultUserAgent(webView.context)
+                .replace("; wv;", "; ")
+                .replace("Version/4.0 ", "")
             useWideViewPort = true
             loadWithOverviewMode = true
             // Preview is a browsing surface: pinch in/out so dense pages stay
@@ -126,6 +147,18 @@ object PreviewPerformanceAddon {
         private val cache: PrefetchCache?,
         onEvent: (ArenaNavEvent) -> Unit,
     ) : ArenaWebViewClient(onEvent) {
+        /** Enforce the mobile viewport as early as the document exists … */
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            view?.evaluateJavascript(ENFORCE_VIEWPORT_JS, null)
+        }
+
+        /** … and again once committed (overwrite any meta the parser added). */
+        override fun onPageCommitVisible(view: WebView?, url: String?) {
+            super.onPageCommitVisible(view, url)
+            view?.evaluateJavascript(ENFORCE_VIEWPORT_JS, null)
+        }
+
         override fun shouldInterceptRequest(
             view: WebView?,
             request: WebResourceRequest?,
