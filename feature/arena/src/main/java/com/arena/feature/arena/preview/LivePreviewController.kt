@@ -82,7 +82,12 @@ class LivePreviewController @Inject constructor() {
             return existing
         }
 
-        val webView = WebView(context.applicationContext).apply {
+        // Activity context (not applicationContext): the renderer must
+        // resolve layout against the real window metrics/density — app-context
+        // WebViews can mis-scale on foldables/large screens. Safe to pool:
+        // MainActivity is the single activity and is not recreated on
+        // rotation (configChanges), so it lives as long as the process.
+        val webView = WebView(context).apply {
             PreviewPerformanceAddon.tune(this)
             webViewClient = PreviewPerformanceAddon.servingClient(cache) { event ->
                 _state.update { it.reduce(event) }
