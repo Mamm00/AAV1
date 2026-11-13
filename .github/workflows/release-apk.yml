@@ -97,8 +97,40 @@ jobs:
           echo "generated=$GENERATED" >> "$GITHUB_OUTPUT"
 
       - name: Build debug + release APKs
+        id: build
         run: |
-          gradle --no-daemon --stacktrace :app:assembleDebug :app:assembleRelease
+          set -o pipefail
+          gradle --no-daemon --stacktrace :app:assembleDebug :app:assembleRelease \
+            2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # Runner log downloads are restricted in some environments, so surface
+      # the failure excerpt as a check annotation (readable via the Checks
+      # API on api.github.com) instead of relying on the raw logs.
+      - name: Surface build errors as annotation
+        if: failure() && steps.build.outcome == 'failure'
+        run: |
+          python3 - <<'PY'
+          import os, pathlib
+          log = pathlib.Path(os.environ["RUNNER_TEMP"]) / "build.log"
+          text = log.read_text(errors="replace") if log.exists() else "(no build.log)"
+          chunk = None
+          for marker in ("What went wrong", "FAILURE:", "^e: ", "error: ", "Could not resolve"):
+              if marker.startswith("^e: "):
+                  idx = text.find("\ne: ")
+                  if idx >= 0:
+                      chunk = text[idx:idx + 24000]
+                      break
+                  continue
+              idx = text.find(marker)
+              if idx >= 0:
+                  chunk = text[idx:idx + 24000]
+                  break
+          if chunk is None:
+              chunk = text[-24000:]
+          enc = chunk.replace("\r\n", "\n")
+          enc = enc.replace("%", "%25").replace("\n", "%0A")
+          print(f"::error title=Gradle build failed::{enc}")
+          PY
 
       - name: Collect outputs
         id: collect
