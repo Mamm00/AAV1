@@ -106,6 +106,7 @@ dependencies {
 
     implementation(libs.androidx.webkit)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.hilt.android)
