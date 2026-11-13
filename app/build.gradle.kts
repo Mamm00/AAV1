@@ -20,6 +20,21 @@ android {
         vectorDrawables { useSupportLibrary = true }
     }
 
+    signingConfigs {
+        // CI supplies these (ephemeral keystore or repository secret); when
+        // absent, release falls back to the debug keystore so the build still
+        // produces an installable, signed artifact.
+        val ciKeystore = System.getenv("ARENA_KEYSTORE_FILE")
+        if (!ciKeystore.isNullOrBlank()) {
+            create("release") {
+                storeFile = file(ciKeystore)
+                storePassword = System.getenv("ARENA_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ARENA_KEY_ALIAS")
+                keyPassword = System.getenv("ARENA_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -28,6 +43,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.findByName("release")
+                ?: signingConfigs.getByName("debug")
         }
         debug {
             applicationIdSuffix = ".debug"
