@@ -50,7 +50,7 @@ sealed interface ArenaNavEvent {
  *    rebuild state in `onPageFinished` for bfcache restores (the wrapper
  *    relies on WebView's default bfcache support).
  */
-class ArenaWebViewClient(
+open class ArenaWebViewClient(
     private val onEvent: (ArenaNavEvent) -> Unit,
     private val allowExternalNavigation: (String) -> Boolean = { false },
 ) : WebViewClient() {
