@@ -28,8 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.webkit.WebSettingsCompat
-import androidx.webkit.WebViewFeature
 
 /**
  * Persistable WebView session state.
@@ -70,7 +68,7 @@ data class ArenaWebSession(
  * The WebView engine surface.
  *
  * Applies the performance checklist from the spec:
- *  - Back-forward cache via `WebSettingsCompat.setBackForwardCacheEnabled`
+ *  - Back-forward cache preserved (WebView default; no stopLoading on finish)
  *  - HTTP cache tuned to [WebSettings.LOAD_DEFAULT] so SSE/auth are untouched
  *  - Typed bridge via [ArenaBridge] (never `addJavascriptInterface`)
  *  - `rememberSaveable` session state across configuration changes
@@ -168,10 +166,9 @@ fun applyArenaSettings(webView: WebView) {
         // Scoped storage hardening for the document.
         allowFileAccess = false
         allowContentAccess = false
-        // Back-forward cache (bfcache): critical for instant mode switches.
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.BACK_FORWARD_CACHE)) {
-            WebSettingsCompat.setBackForwardCacheEnabled(this, true)
-        }
+        // Back-forward cache (bfcache): enabled by default in modern WebView.
+        // The wrapper preserves it by never calling stopLoading() from
+        // onPageFinished (see ArenaWebViewClient) so restores stay instant.
         // Safe browsing starts automatically on API 26+; no manual opt-in
         // needed (and the explicit callback API differs across WebView
         // versions, so we avoid binding to it here).
