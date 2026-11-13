@@ -60,7 +60,7 @@ abstract class ArenaDatabase : RoomDatabase() {
                         stmt.bindString(1, m.id)
                         stmt.bindString(2, m.displayName)
                         if (m.provider != null) stmt.bindString(3, m.provider) else stmt.bindNull(3)
-                        stmt.bindString(4, m.modality.name)
+                        stmt.bindString(4, m.modality)
                         if (m.arenaRank != null) stmt.bindLong(5, m.arenaRank.toLong()) else stmt.bindNull(5)
                         if (m.votes != null) stmt.bindLong(6, m.votes.toLong()) else stmt.bindNull(6)
                         if (m.contextWindow != null) stmt.bindLong(7, m.contextWindow.toLong()) else stmt.bindNull(7)
