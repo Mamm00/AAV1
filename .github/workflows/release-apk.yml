@@ -196,3 +196,6 @@ jobs:
               "$OUT/Arena-$VERSION-debug.apk" \
               "$OUT/SHA256SUMS.txt"
           fi
+          # Deleting/re-pushing the tag during iteration converts the release
+          # back to a draft; every green run must end with it published.
+          gh release edit "$TAG" --draft=false
