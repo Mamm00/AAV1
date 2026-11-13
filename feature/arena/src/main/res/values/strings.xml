@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_back">Back</string>
+
+    <!-- Home -->
+    <string name="home_title">Arena</string>
+    <string name="home_subtitle">Battle · Direct · Side-by-Side · Agent</string>
+    <string name="home_leaderboard">Leaderboard</string>
+    <string name="home_image_editor">Image editor</string>
+    <string name="home_code_editor">Code editor</string>
+    <string name="home_clipboard_chip">Paste clipboard as prompt</string>
+    <string name="home_recommended_title">Recommended for you</string>
+    <string name="home_mode_battle_title">Battle</string>
+    <string name="home_mode_battle_body">Two anonymous models, you pick the winner.</string>
+    <string name="home_mode_direct_title">Direct</string>
+    <string name="home_mode_direct_body">Pick any of 300+ models and chat.</string>
+    <string name="home_mode_sbs_title">Side-by-Side</string>
+    <string name="home_mode_sbs_body">Run two named models with one prompt.</string>
+    <string name="home_mode_agent_title">Agent</string>
+    <string name="home_mode_agent_body">Tools, files, search, and sandboxed code.</string>
+
+    <!-- Battle -->
+    <string name="battle_title">Battle</string>
+    <string name="battle_model_a">Model A</string>
+    <string name="battle_model_b">Model B</string>
+    <string name="battle_vote_a">Vote A</string>
+    <string name="battle_vote_b">Vote B</string>
+    <string name="battle_vote_tie">Tie</string>
+    <string name="battle_vote_both_bad">Both bad</string>
+    <string name="battle_revealed">Revealed after your vote</string>
+    <string name="battle_waiting">Waiting for responses…</string>
+
+    <!-- Direct -->
+    <string name="direct_title">Direct</string>
+    <string name="direct_input_hint">Ask anything</string>
+    <string name="direct_send">Send</string>
+    <string name="direct_hold_talk">Hold to talk</string>
+    <string name="direct_attach">Attach</string>
+    <string name="direct_stop">Stop</string>
+    <string name="direct_copy">Copy</string>
+    <string name="direct_share">Share</string>
+    <string name="direct_regenerate">Regenerate</string>
+
+    <!-- Side-by-side -->
+    <string name="sbs_title">Side-by-Side</string>
+    <string name="sbs_prompt_hint">One prompt, two models</string>
+    <string name="sbs_show_diff">Show diff</string>
+    <string name="sbs_hide_diff">Hide diff</string>
+    <string name="sbs_left">Left</string>
+    <string name="sbs_right">Right</string>
+
+    <!-- Agent -->
+    <string name="agent_title">Agent</string>
+    <string name="agent_web_search">Web search</string>
+    <string name="agent_files">Files</string>
+    <string name="agent_image_gen">Image generation</string>
+    <string name="agent_task_timeline">Task timeline</string>
+    <string name="agent_bash">Bash output</string>
+    <string name="agent_prompt_hint">Give the agent a task…</string>
+    <string name="agent_run">Run</string>
+    <string name="agent_service_channel">Agent tasks</string>
+
+    <!-- Model picker -->
+    <string name="picker_title">Choose a model</string>
+    <string name="picker_search">Search 300+ models</string>
+    <string name="picker_recommended">Recommended for you</string>
+    <string name="picker_group_text">Text</string>
+    <string name="picker_group_image">Image</string>
+    <string name="picker_group_code">Code</string>
+    <string name="picker_group_search">Search</string>
+    <string name="picker_group_video">Video</string>
+    <string name="picker_rank_badge">Rank %1$d</string>
+
+    <!-- Image editor -->
+    <string name="editor_title">Image editor</string>
+    <string name="editor_crop">Crop</string>
+    <string name="editor_rotate">Rotate</string>
+    <string name="editor_filter">Filter</string>
+    <string name="editor_none">Original</string>
+    <string name="editor_take_photo">Take photo</string>
+    <string name="editor_choose_image">Choose image</string>
+    <string name="editor_send">Send to model</string>
+    <string name="editor_pick_first">Choose or capture an image first</string>
+
+    <!-- Code editor -->
+    <string name="code_title">Code editor</string>
+    <string name="code_sync">Sync to coding arena</string>
+    <string name="code_language">Language</string>
+
+    <!-- Leaderboard -->
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="leaderboard_text">Text</string>
+    <string name="leaderboard_code">Code</string>
+    <string name="leaderboard_image">Image</string>
+    <string name="leaderboard_offline">Offline — showing cached rankings</string>
+    <string name="leaderboard_empty">No cached rankings yet. Connect once to fetch.</string>
+    <string name="leaderboard_refresh">Refresh</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">Camera access</string>
+    <string name="permission_camera_rationale">Used only when you tap Take photo, so you can attach a fresh picture. The system photo picker always remains available as a fallback.</string>
+    <string name="permission_audio_title">Microphone access</string>
+    <string name="permission_audio_rationale">Used only while you hold the mic to dictate a prompt or record an agent voice note. Recording never starts before you press and hold.</string>
+    <string name="permission_media_title">Media access</string>
+    <string name="permission_media_rationale">Only needed to browse your full photo library. Single picks use the system photo picker — no permission required.</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_rationale">Lets you vote on Battle results from a notification and know when a long Agent task finishes — even when the app is closed.</string>
+    <string name="permission_continue">Continue</string>
+    <string name="permission_not_now">Not now</string>
+
+    <!-- Offline -->
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_body">Showing cached models and your last conversation.</string>
+    <string name="offline_retry">Retry</string>
+
+    <!-- A11y -->
+    <string name="a11y_response">Model response</string>
+    <string name="a11y_vote">Vote</string>
+    <string name="a11y_loading">Loading</string>
+    <string name="a11y_close">Close</string>
+</resources>
