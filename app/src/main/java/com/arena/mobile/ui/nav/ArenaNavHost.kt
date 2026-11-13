@@ -24,6 +24,7 @@ import com.arena.feature.arena.home.HomeAdaptiveScreen
 import com.arena.feature.arena.home.HomeMode
 import com.arena.feature.arena.imageeditor.NativeImageEditorScreen
 import com.arena.feature.arena.leaderboard.OfflineLeaderboardScreen
+import com.arena.feature.arena.preview.LivePreviewScreen
 import com.arena.feature.arena.session.ArenaSessionHostViewModel
 import com.arena.feature.arena.session.SessionWebViewHost
 import com.arena.feature.arena.sidebyside.SideBySideScreen
@@ -41,6 +42,7 @@ object Routes {
     const val IMAGE_EDITOR = "image_editor"
     const val CODE_EDITOR = "code_editor"
     const val LEADERBOARD = "leaderboard"
+    const val PREVIEW = "preview"
 }
 
 @Composable
@@ -89,6 +91,7 @@ private fun ArenaNavGraph(navController: NavHostController) {
                         HomeMode.DIRECT -> navController.navigate(Routes.DIRECT)
                         HomeMode.SIDE_BY_SIDE -> navController.navigate(Routes.SIDE_BY_SIDE)
                         HomeMode.AGENT -> navController.navigate(Routes.AGENT)
+                        HomeMode.PREVIEW -> navController.navigate(Routes.PREVIEW)
                     }
                 },
                 onOpenLeaderboard = { navController.navigate(Routes.LEADERBOARD) },
@@ -103,5 +106,7 @@ private fun ArenaNavGraph(navController: NavHostController) {
         composable(Routes.IMAGE_EDITOR) { NativeImageEditorScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.CODE_EDITOR) { CodeEditorScreen(onBack = { navController.popBackStack() }) }
         composable(Routes.LEADERBOARD) { OfflineLeaderboardScreen(onBack = { navController.popBackStack() }) }
+        // Live Preview owns its own pooled WebView (no session host needed).
+        composable(Routes.PREVIEW) { LivePreviewScreen(onBack = { navController.popBackStack() }) }
     }
 }

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/** The four principal modes, in canonical order. */
-enum class HomeMode { BATTLE, DIRECT, SIDE_BY_SIDE, AGENT }
+/** The principal modes, in canonical order. */
+enum class HomeMode { BATTLE, DIRECT, SIDE_BY_SIDE, AGENT, PREVIEW }
 
 data class HomeModeUi(
     val mode: HomeMode,
@@ -68,6 +68,12 @@ class HomeViewModel @Inject constructor(
         HomeModeUi(HomeMode.DIRECT, "Direct", "Pick any of 300+ models and chat.", 1),
         HomeModeUi(HomeMode.SIDE_BY_SIDE, "Side-by-Side", "Run two named models with one prompt.", 2),
         HomeModeUi(HomeMode.AGENT, "Agent", "Tools, files, search, and sandboxed code.", 3),
+        HomeModeUi(
+            HomeMode.PREVIEW,
+            "Live Preview",
+            "The arena.ai site itself — prewarmed, cached, instant.",
+            4,
+        ),
     )
 
     init {

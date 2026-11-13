@@ -144,6 +144,27 @@ memory when the user is just browsing the leaderboard.
 - `SpeculativeLoadingBenchmark` — prefetch hit rate (cold vs warm pass) and
   PSS memory overhead of the speculative cache.
 
+### Live Preview tab
+
+A fifth Home mode (`preview` route, `HomeMode.PREVIEW`) renders the arena.ai
+website itself full-screen, driven by `LivePreviewController` +
+`PreviewPerformanceAddon` for "super fast responding":
+
+- **Rendered-frame reuse** — one pooled WebView (application context) is
+  re-attached on every tab re-entry: no reload, no SPA re-bootstrap, scroll
+  position intact.
+- **Connection prewarm** — a rate-limited (60 s) HEAD warm-up opens
+  DNS + TCP + TLS right before the tab is shown, even long after cold start.
+- **Instant shell serving** — main-frame navigations matching the tier-2
+  `PrefetchCache` are answered from disk (`text/html` stream) while the SPA
+  revalidates its data over the network; the prewarm refreshes the root shell.
+- **Instant Back** — predictive back pops in-page history first (bfcache
+  frame restore), then the tab; renderer death bumps a generation counter so
+  only a dead frame is ever recreated.
+- Offline: native fallback surface over the last frame; refresh retries.
+
+Covered by `LivePreviewStateTest` (pure reducer transitions).
+
 ---
 
 ## Feature parity map
