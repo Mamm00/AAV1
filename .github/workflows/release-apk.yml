@@ -113,23 +113,33 @@ jobs:
           import os, pathlib
           log = pathlib.Path(os.environ["RUNNER_TEMP"]) / "build.log"
           text = log.read_text(errors="replace") if log.exists() else "(no build.log)"
-          chunk = None
-          # Kotlin compiler errors ("e: file:///...") precede Gradle's
-          # "What went wrong" summary — prefer them so we see real messages.
-          idx = text.find("\ne: ")
-          if idx >= 0:
-              chunk = text[idx:idx + 24000]
+          lines = text.splitlines()
+          # Kotlin compiler errors ("e: ...") carry the precise message. A
+          # single workflow-command annotation is capped near 4 KB by the
+          # runner, so split the error lines across up to 10 annotations.
+          errors = [l for l in lines if l.startswith("e: ") or l.startswith("error: ")]
+          chunks = []
+          if errors:
+              cur, n = [], 0
+              for l in errors:
+                  if n + len(l) + 1 > 3200 and cur:
+                      chunks.append(cur); cur, n = [], 0
+                  cur.append(l); n += len(l) + 1
+              if cur:
+                  chunks.append(cur)
           else:
-              for marker in ("error: ", "Could not resolve", "What went wrong", "FAILURE:"):
+              for marker in ("What went wrong", "FAILURE:", "Could not resolve"):
                   idx = text.find(marker)
                   if idx >= 0:
-                      chunk = text[idx:idx + 24000]
+                      chunks = [text[idx:idx + 3200].splitlines()]
                       break
-          if chunk is None:
-              chunk = text[-24000:]
-          enc = chunk.replace("\r\n", "\n")
-          enc = enc.replace("%", "%25").replace("\n", "%0A")
-          print(f"::error title=Gradle build failed::{enc}")
+              if not chunks:
+                  chunks = [lines[-40:]]
+          chunks = chunks[:10]
+          for i, c in enumerate(chunks, 1):
+              body = "\n".join(c).replace("\r", "")
+              body = body.replace("%", "%25").replace("\n", "%0A")
+              print(f"::error title=Gradle build failed ({i}/{len(chunks)})::{body}")
           PY
 
       - name: Collect outputs

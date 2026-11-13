@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.webkit.WebMessage
 import android.webkit.WebView
-import androidx.webkit.WebMessageListener
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import kotlinx.coroutines.CoroutineScope
@@ -59,8 +58,9 @@ class ArenaBridge(
      * [sourceOrigin] is provided by WebKit from the document's real origin —
      * it cannot be spoofed by page script.
      */
-    val listener = WebMessageListener { message, sourceOrigin, _ ->
-        if (!isAllowedArenaOrigin(sourceOrigin)) return@WebMessageListener
+    val listener = WebViewCompat.WebMessageListener { _, message, sourceOrigin, isMainFrame, _ ->
+        if (!isMainFrame) return@WebMessageListener
+        if (!isAllowedArenaOrigin(sourceOrigin?.toString())) return@WebMessageListener
         val payload = message?.data ?: return@WebMessageListener
         val decoded = BridgeCodec.decode(payload) ?: return@WebMessageListener
         if (decoded is BridgeMessage.Ready) pageReady = true
