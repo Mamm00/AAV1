@@ -1,7 +1,10 @@
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.benchmark)
+    // NOTE: the androidx.benchmark Gradle plugin only supports android
+    // library modules with AGP 8.7+ and is NOT required to run
+    // macrobenchmarks from a com.android.test module (per the plugin's own
+    // diagnostic). Instrumentation comes from benchmark-macro-junit4.
 }
 
 android {
