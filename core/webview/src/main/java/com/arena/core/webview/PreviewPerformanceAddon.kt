@@ -50,7 +50,18 @@ object PreviewPerformanceAddon {
     @SuppressLint("SetJavaScriptEnabled")
     fun tune(webView: WebView) {
         applyArenaSettings(webView)
+        // Resolution/fit fix: honour the site's meta viewport, fit the WHOLE
+        // page width on load (overview zoom-out for wide desktop layouts),
+        // and let the system pick the initial scale (0 = fit, not 100%).
+        webView.setInitialScale(0)
         webView.settings.apply {
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            // Preview is a browsing surface: pinch in/out so dense pages stay
+            // readable even after the fit-to-width overview.
+            setSupportZoom(true)
+            builtInZoomControls = true
+            displayZoomControls = false
             // Preview is read-mostly browsing: keep platform HTTP caching on.
             cacheMode = WebSettings.LOAD_DEFAULT
             // Images already load by default; ensure the renderer may fetch
